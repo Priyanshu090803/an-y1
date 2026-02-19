@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AN-Y1</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background-image: url("https://samplework.co.in/an-y1/image/background.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      height: 90vh;
+      overflow-x: hidden;
+    }
+    .header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      text-align: center;
+      z-index: 9999;
+    }
+    .header img {
+      width: 100%;
+      max-height: 15vh;
+    }
+    .figure {
+      position: relative;
+      text-align: center;
+      margin-top: 9vh;
+    }
+    .figure img {
+      max-width: 100%;
+      height: 100%;
+    }
+    .main-slider {
+      display: none;
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+    .main-slider.active {
+      display: block;
+    }
+    .main-slider .slider-container {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+    .main-slider .slider-item {
+      flex: 0 0 100%;
+      text-align: center;
+      cursor: pointer;
+    }
+    .main-slider .slider-item img {
+      max-width: 100%;
+      height: 100vh;
+      max-height: 70vh;
+      object-fit: contain;
+    }
+    .main-slider .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2.5vw;
+      color: #000;
+      cursor: pointer;
+      z-index: 1100;
+      background: #d3cdcc;
+      border-radius: 50%;
+      padding: 1vw 1.5vw;
+    }
+    .main-slider .arrow.left {
+      left: 6.5vw;
+    }
+    .main-slider .arrow.right {
+      right: 6.5vw;
+    }
+    .main-slider .arrow {
+      margin-top: -16vh;
+    }
+    .icons {
+      position: absolute;
+      bottom: 10vh;
+      right: 3vw;
+      display: inline-grid;
+      gap: 1.5vw;
+    }
+    .icon {
+      width: 10vw;
+      height: 8.5vw;
+      cursor: pointer;
+    }
+    .icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .like-icon.active img {
+      content: url('img/heartwhite1.png');
+      width: 7vw;
+      height: 7vw;
+    }
+    .like-icon img {
+      transition: 0.3s ease;
+    }
+    /*.like-icon.active {*/
+    /*  width: 7vw;*/
+    /*  background: #c1c0c0;*/
+    /*  border-radius: 50%;*/
+    /*  height: 7vw;*/
+    /*  margin-left: 1.5vw;*/
+    /*}*/
+    .horizontal-slider {
+      display: none;
+      position: fixed;
+      top: 70%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(193, 192, 192, 0.3);
+      padding: 3vw;
+      z-index: 1000;
+      width: 90%;
+      max-width: 90vw;
+    }
+    .horizontal-slider.active {
+      display: block;
+    }
+    .slider-container {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+    .slider-item {
+      flex: 0 0 25%;
+      text-align: center;
+      cursor: pointer;
+    }
+    .slider-item img {
+      width: 100%;
+      object-fit: contain;
+    }
+    .close {
+      position: absolute;
+      top: 0;
+      right: 1.5vw;
+      color: white;
+      font-size: 3.5vw;
+      cursor: pointer;
+    }
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2.5vw;
+      color: #000;
+      cursor: pointer;
+      z-index: 1100;
+      background: #d3cdcc;
+      border-radius: 50%;
+      padding: 1vw 1.5vw;
+    }
+    .arrow.left {
+      left: 1.5vw;
+    }
+    .arrow.right {
+      right: 1.5vw;
+    }
+    .product-popup {
+      display: none;
+      position: fixed;
+      top: 10vh;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 2000;
+      overflow-y: auto;
+    }
+    .popup-inner {
+      background: #fff;
+      max-width: 90%;
+      margin: 5vh auto;
+      border-radius: 1.2vw;
+      overflow: hidden;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5vw 2.2vw;
+    }
+    .topbar i {
+      font-size: 3vw;
+      cursor: pointer;
+    }
+    .bag {
+      background: #eee;
+      border-radius: 50%;
+      padding: 1.5vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .media img {
+      width: 100%;
+      display: block;
+    }
+    .product {
+      padding: 2.2vw;
+    }
+    .title {
+      font-size: 3vw;
+      font-weight: bold;
+      margin-bottom: 0.7vw;
+    }
+    .subtitle {
+      color: #666;
+      margin-bottom: 1.2vw;
+      font-size: 2.5vw;
+    }
+    .price {
+      font-size: 2.7vw;
+      font-weight: bold;
+      margin: 1.5vw 0;
+    }
+    .label {
+      font-size: 1.8vw;
+      font-weight: bold;
+      color: #666;
+      text-transform: uppercase;
+    }
+    .swatches {
+      display: flex;
+      gap: 1.5vw;
+      margin: 1.5vw 0;
+    }
+    .swatch {
+      width: 4.5vw;
+      height: 4.5vw;
+      border-radius: 50%;
+      border: 0.3vw solid #ccc;
+      cursor: pointer;
+    }
+    .swatch.is-active {
+      border-color: #000;
+    }
+    .accordion {
+      border-top: 0.15vw solid #e0e0e0;
+    }
+    .acc-item {
+      border-bottom: 0.15vw solid #e0e0e0;
+    }
+    .acc-btn {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 1.8vw 0;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 2.2vw;
+    }
+    .acc-panel {
+      display: none;
+      padding: 0 0 1.8vw;
+      color: #666;
+      font-size: 2.1vw;
+    }
+    .acc-item.open .acc-panel {
+      display: block;
+    }
+    .sizes {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5vw;
+      margin: 1.8vw 0;
+    }
+    .size {
+      padding: 1.5vw;
+      border: 0.15vw solid #ccc;
+      text-align: center;
+      border-radius: 0.9vw;
+      cursor: pointer;
+      font-size: 2.1vw;
+    }
+    .size.is-active {
+      border-color: #000;
+    }
+    .size:disabled {
+      opacity: 0.4;
+      text-decoration: line-through;
+    }
+    .style-toggle {
+      display: flex;
+      gap: 1.5vw;
+      margin: 1.5vw 0;
+    }
+    .pill {
+      flex: 1;
+      padding: 1.5vw;
+      border: 0.15vw solid #ccc;
+      text-align: center;
+      border-radius: 0.9vw;
+      cursor: pointer;
+      font-size: 2.1vw;
+    }
+    .pill.is-active {
+      background: #000;
+      color: #fff;
+    }
+    .cta {
+      padding: 2.2vw;
+    }
+    .btn {
+      width: 100%;
+      padding: 1.8vw;
+      border-radius: 0.9vw;
+      margin: 1.2vw 0;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 2.2vw;
+    }
+    .btn-outline {
+      border: 0.3vw solid #000;
+      background: #fff;
+    }
+    .btn-primary {
+      background: #000;
+      color: #fff;
+      border: none;
+    }
+    .meta {
+      font-size: 1.8vw;
+      color: #666;
+      margin-top: 1.5vw;
+      line-height: 1.5;
+    }
+    #hangerPopup img {
+      max-width: 90%;
+      max-height: 80vh;
+      margin-top: 10vh;
+      cursor: pointer;
+    }
+    /* Share Popup */
+    #sharePopup {
+      position: fixed;
+      top: 10vh;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      z-index: 4000;
+    }
+    .share-popup-inner {
+      position: relative;
+    max-width: 840px;
+    margin: 5% auto;
+    background: rgba(193, 192, 192, 0.3);
+    padding: 10px;
+    }
+    #closeSharePopup {
+      position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 28px;
+    cursor: pointer;
+    color: #333;
+    }
+    .share-popup-inner .container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 5vh;
+    }
+    .share-popup-inner .image-container {
+      position: relative;
+      display: inline-block;
+    }
+    .share-popup-inner .image-container img {
+      width: 200px;
+      /*border-radius: 10px;*/
+    }
+    .share-popup-inner .share-icon {
+      position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: #c0b9b6;
+    border-radius: 50%;
+    cursor: pointer;
+    }
+    .share-popup-inner .share-icon img {
+      width: 40px !important;
+    height: 40px;
+    }
+    /* Media Queries for Mobile and Tablet */
+    @media (max-width: 768px) {
+      .header img {
+        max-height: 12vh;
+      }
+      .main-slider .slider-item img {
+        max-height: 90vh;
+      }
+      .icons {
+        bottom: 18vh;
+        right: 2vw;
+        gap: 1vw;
+      }
+      .icon {
+        width: 20vw;
+        height: 15.5vw;
+      }
+      /*.like-icon.active {*/
+      /*  width: 8.5vw;*/
+      /*  height: 8.5vw;*/
+      /*}*/
+      .like-icon.active img {
+        width: 10vw;
+        height: 10vw;
+        border-radius: 50%;
+        background: #bcb8af;
+        margin-top: 0.6rem;
+        padding: 5px;
+        margin-right: 0rem;
+    }
+      .horizontal-slider {
+        width: 95%;
+        padding: 5vw;
+      }
+      .slider-item {
+        flex: 0 0 25%;
+      }
+      .close {
+        font-size: 4vw;
+      }
+      .arrow {
+        font-size: 3vw;
+        padding: 1.2vw 1.8vw;
+      }
+      .main-slider .arrow {
+        font-size: 3vw;
+        padding: 1.2vw 1.8vw;
+      }
+      .popup-inner {
+        margin: 3vh auto;
+      }
+      .title {
+        font-size: 3.5vw;
+      }
+      .subtitle {
+        font-size: 3vw;
+      }
+      .price {
+        font-size: 3.2vw;
+      }
+      .label {
+        font-size: 2.2vw;
+      }
+      .swatch {
+        width: 5vw;
+        height: 5vw;
+      }
+      .acc-btn {
+        font-size: 2.5vw;
+      }
+      .acc-panel {
+        font-size: 2.4vw;
+      }
+      .size {
+        font-size: 2.4vw;
+      }
+      .pill {
+        font-size: 2.4vw;
+      }
+      .btn {
+        font-size: 2.5vw;
+      }
+      .meta {
+        font-size: 2.2vw;
+      }
+      #hangerPopup img {
+        max-width: 95%;
+        max-height: 75vh;
+      }
+      .share-popup-inner .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .share-popup-inner .image-container img {
+        width: 100%;
+      }
+    }
+    @media (max-width: 480px) {
+      .header img {
+        max-height: 10vh;
+      }
+      .main-slider .slider-item img {
+        max-height: 90vh;
+      }
+      .icons {
+        bottom: 20vh;
+        right: 1.5vw;
+        gap: 0.8vw;
+      }
+      .icon {
+        width: 20vw;
+        height: 15.5vw;
+      }
+      /*.like-icon.active {*/
+      /*  width: 10vw;*/
+      /*  height: 10vw;*/
+      /*}*/
+      .like-icon.active img {
+        width: 10vw;
+        height: 10vw;
+        border-radius: 50%;
+        background: #bcb8af;
+        margin-top: 0.6rem;
+        padding: 5px;
+        margin-right: 0rem;
+    }
+      .horizontal-slider {
+        width: 98%;
+        top: 65%;
+      }
+      .slider-item {
+        flex: 0 0 25%;
+      }
+      .close {
+        font-size: 5vw;
+      }
+      .arrow {
+        font-size: 3.5vw;
+        padding: 1.5vw 2vw;
+      }
+      .main-slider .arrow {
+        font-size: 3.5vw;
+        padding: 1.5vw 2vw;
+      }
+      .popup-inner {
+        margin: 2vh auto;
+      }
+      .title {
+        font-size: 4vw;
+      }
+      .subtitle {
+        font-size: 3.5vw;
+      }
+      .price {
+        font-size: 3.8vw;
+      }
+      .label {
+        font-size: 2.8vw;
+      }
+      .swatch {
+        width: 6vw;
+        height: 6vw;
+      }
+      .acc-btn {
+        font-size: 3vw;
+      }
+      .acc-panel {
+        font-size: 2.8vw;
+      }
+      .size {
+        font-size: 2.8vw;
+      }
+      .pill {
+        font-size: 2.8vw;
+      }
+      .btn {
+        font-size: 3vw;
+      }
+      .meta {
+        font-size: 2.5vw;
+      }
+      #hangerPopup img {
+        max-width: 100%;
+        max-height: 100vh;
+        margin-top: 12vh;
+        margin-left: 2vh;
+      }
+      .share-popup-inner .container {
+        display: grid;
+  grid-template-columns: 1fr; /* har row me ek hi image */
+  gap: 15px;
+  max-height: 80vh;   /* popup ke andar scroll ka limit */
+  overflow-y: auto;   /* scroll enable */
+      }
+      .share-popup-inner .image-container img {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="image/an-y1-banner.png" alt="Oddmuse Logo" />
+  </div>
+  <div class="figure">
+    <img src="image/1a.jpg" alt="Fashion Design" id="mainFigureImage" />
+    <div class="main-slider" id="mainSlider">
+      <span class="arrow left">&#10094;</span>
+      <span class="arrow right">&#10095;</span>
+      <div class="slider-container" id="mainSliderContainer">
+        <div class="slider-item"><img src="image/1.png" alt="Main Item 1" /></div>
+        <div class="slider-item"><img src="image/2.png" alt="Main Item 2" /></div>
+        <div class="slider-item"><img src="image/3.png" alt="Main Item 3" /></div>
+        <div class="slider-item"><img src="image/4.png" alt="Main Item 4" /></div>
+        <div class="slider-item"><img src="image/5.png" alt="Main Item 5" /></div>
+        <div class="slider-item"><img src="image/6.png" alt="Main Item 6" /></div>
+        <div class="slider-item"><img src="image/7.png" alt="Main Item 7" /></div>
+      </div>
+    </div>
+    <div class="icons">
+      <div class="icon like-icon"><img src="img/like and save.png" alt="Heart Icon" /></div>
+      <div class="icon"><img src="img/Hanger.png" alt="Hanger Icon" /></div>
+      <div class="icon share-icon"><img src="img/share.png" alt="Share Icon" /></div>
+      <div class="icon"><img src="img/clothes.png" alt="Tshirt Icon" /></div>
+    </div>
+  </div>
+  <div class="horizontal-slider">
+    <span class="close">&times;</span>
+    <span class="arrow left">&#10094;</span>
+    <span class="arrow right">&#10095;</span>
+    <div class="slider-container" id="sliderContainer">
+      <div class="slider-item"><img src="img/1cr.png" alt="Item 1" /></div>
+      <div class="slider-item"><img src="img/2cr.png" alt="Item 2" /></div>
+      <div class="slider-item"><img src="img/3cr.png" alt="Item 3" /></div>
+      <div class="slider-item"><img src="img/4cr.png" alt="Item 4" /></div>
+      <div class="slider-item"><img src="img/5cr.png" alt="Item 5" /></div>
+      <div class="slider-item"><img src="img/6cr.png" alt="Item 6" /></div>
+      <div class="slider-item"><img src="img/7cr.png" alt="Item 7" /></div>
+      <div class="slider-item"><img src="img/8cr.png" alt="Item 8" /></div>
+      <div class="slider-item"><img src="img/9cr.png" alt="Item 9" /></div>
+    </div>
+  </div>
+  <div class="product-popup" id="productPopup">
+    <div class="popup-inner">
+      <div class="topbar">
+        <div class="popup-close"><i class="fa-solid fa-xmark"></i></div>
+        <div class="bag"><i class="fa-solid fa-bag-shopping"></i></div>
+      </div>
+      <section class="media">
+        <img id="popupImage" src="img/11cr.png" alt="Structured Mini Skirt">
+      </section>
+      <section class="product">
+        <h1 class="title">The Ultimate Muse Structured Mini Skirt</h1>
+        <p class="subtitle">Oat</p>
+        <p class="price">£70.00</p>
+        <p class="label">Color</p>
+        <div class="swatches">
+          <div class="swatch is-active" style="background:#efece3" data-name="Oat"></div>
+          <div class="swatch" style="background:#000" data-name="Black"></div>
+          <div class="swatch" style="background:#f5f5f5" data-name="Pearl"></div>
+        </div>
+        <div class="accordion">
+          <div class="acc-item open">
+            <div class="acc-btn">Description <span>▼</span></div>
+            <div class="acc-panel">Elevate your Spring style with the Ultimate Muse Structured Mini Skirt...</div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-btn">Product Details <span>▼</span></div>
+            <div class="acc-panel">• Hidden back zip<br>• Faux flap pockets<br>• Fully lined</div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-btn">Fit & Model Information <span>▼</span></div>
+            <div class="acc-panel">Fits true to size. Model is 5'9" wearing S.</div>
+          </div>
+          <div class="acc-item">
+            <div class="acc-btn">Composition & Care <span>▼</span></div>
+            <div class="acc-panel">60% Viscose, 35% Polyester, 5% Elastane. Dry clean only.</div>
+          </div>
+        </div>
+        <p class="label">Size</p>
+        <div class="sizes">
+          <button class="size" disabled>XXS</button>
+          <button class="size" disabled>XS</button>
+          <button class="size" disabled>S</button>
+          <button class="size" disabled>M</button>
+          <button class="size is-active">L</button>
+          <button class="size">XL</button>
+          <button class="size">XXL</button>
+          <button class="size">3XL</button>
+        </div>
+        <p class="label">Style</p>
+        <div class="style-toggle">
+          <div class="pill is-active">REGULAR</div>
+          <div class="pill">TALL</div>
+        </div>
+      </section>
+      <section class="cta">
+        <button class="btn btn-outline">Find your True size</button>
+        <button class="btn btn-outline">CHECK IN-STORE AVAILABILITY</button>
+        <button class="btn btn-primary">ADD TO CART · £70.00</button>
+        <div class="meta">
+          3 payments of £23.33 at 0% interest with Klarna<br>
+          Free Shipping Over £200<br>
+          Next Day Delivery available<br>
+          Designed in London
+        </div>
+      </section>
+    </div>
+  </div>
+  <div id="hangerPopup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:3000;text-align:center;">
+    <img id="hangerPopupImage" src="img/4a.png" />
+  </div>
+  <div id="sharePopup">
+    <div class="share-popup-inner">
+      <div id="closeSharePopup"><i class="fa-solid fa-xmark"></i></div>
+      <div class="container">
+        <div class="image-container">
+          <img src="image/sm1.jpg" alt="Image 1">
+          <div class="share-icon" data-share-url="https://samplework.co.in/an-y1/image/sm1.jpg" data-share-title="Image 1"><img src="img/share.png" alt="Share"></div>
+        </div>
+        <div class="image-container">
+          <img src="image/sm2.png" alt="Image 2">
+          <div class="share-icon" data-share-url="https://samplework.co.in/an-y1/image/sm2.png" data-share-title="Image 2"><img src="img/share.png" alt="Share"></div>
+        </div>
+        <div class="image-container">
+          <img src="image/sm3.jpg" alt="Image 3">
+          <div class="share-icon" data-share-url="https://samplework.co.in/an-y1/image/sm3.jpg" data-share-title="Image 3"><img src="img/share.png" alt="Share"></div>
+        </div>
+        <div class="image-container">
+          <img src="image/sm4.jpg" alt="Image 4">
+          <div class="share-icon" data-share-url="https://samplework.co.in/an-y1/image/sm4.jpg" data-share-title="Image 4"><img src="img/share.png" alt="Share"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const tshirtIcon = document.querySelector('.icon img[src="img/clothes.png"]');
+      const horizontalSlider = document.querySelector(".horizontal-slider");
+      const closeBtn = document.querySelector(".close");
+      const sliderContainer = document.getElementById("sliderContainer");
+      const leftArrow = document.querySelector(".horizontal-slider .arrow.left");
+      const rightArrow = document.querySelector(".horizontal-slider .arrow.right");
+      const productPopup = document.getElementById("productPopup");
+      const popupClose = document.querySelector(".popup-close");
+      const popupImage = document.getElementById("popupImage");
+      const heartIcon = document.querySelector('.like-icon');
+      const hangerIcon = document.querySelector('.icon img[src="img/Hanger.png"]');
+      const hangerPopup = document.getElementById("hangerPopup");
+      const hangerPopupImage = document.getElementById("hangerPopupImage");
+      const mainFigureImage = document.getElementById("mainFigureImage");
+      const mainSlider = document.getElementById("mainSlider");
+      const mainSliderContainer = document.getElementById("mainSliderContainer");
+      const mainLeftArrow = document.querySelector(".main-slider .arrow.left");
+      const mainRightArrow = document.querySelector(".main-slider .arrow.right");
+      const shareIcon = document.querySelector('.share-icon');
+      const sharePopup = document.getElementById("sharePopup");
+      const closeSharePopup = document.getElementById("closeSharePopup");
+
+      let scrollPosition = 0;
+      const visibleItems = 4;
+      const totalItems = sliderContainer.children.length;
+      let mainScrollPosition = 0;
+      const mainVisibleItems = 1;
+      const mainTotalItems = mainSliderContainer.children.length;
+
+      const mapping = {
+        "img/1cr.png": "img/11cr.png",
+        "img/2cr.png": "img/12cr.png",
+        "img/3cr.png": "img/13cr.png",
+        "img/4cr.png": "img/14cr.png",
+        "img/5cr.png": "img/15cr.png",
+        "img/6cr.png": "img/16cr.png",
+        "img/7cr.png": "img/17cr.png",
+        "img/8cr.png": "img/18cr.png",
+        "img/9cr.png": "img/19cr.png"
+      };
+
+      // Horizontal Slider
+      tshirtIcon.addEventListener("click", function () {
+        horizontalSlider.classList.add("active");
+      });
+
+      closeBtn.addEventListener("click", function () {
+        horizontalSlider.classList.remove("active");
+      });
+
+      function updateSlide() {
+        const itemWidth = sliderContainer.children[0].offsetWidth;
+        sliderContainer.style.transform = `translateX(${scrollPosition * -itemWidth}px)`;
+      }
+
+      function nextSlide() {
+        if (scrollPosition < totalItems - visibleItems) scrollPosition++;
+        else scrollPosition = 0;
+        updateSlide();
+      }
+
+      function prevSlide() {
+        if (scrollPosition > 0) scrollPosition--;
+        else scrollPosition = totalItems - visibleItems;
+        updateSlide();
+      }
+
+      rightArrow.addEventListener("click", nextSlide);
+      leftArrow.addEventListener("click", prevSlide);
+
+      setInterval(() => {
+        if (horizontalSlider.classList.contains('active')) nextSlide();
+      }, 3000);
+
+      // Slider item click -> open product popup
+      document.querySelectorAll(".horizontal-slider .slider-item img").forEach(img => {
+        img.addEventListener("click", () => {
+          const src = img.getAttribute("src");
+          if (mapping[src]) popupImage.src = mapping[src];
+          productPopup.style.display = "block";
+        });
+      });
+
+      popupClose.addEventListener("click", () => {
+        productPopup.style.display = "none";
+      });
+
+      heartIcon.addEventListener('click', () => {
+        heartIcon.classList.toggle('active');
+      });
+
+      // Accordion toggle
+      document.querySelectorAll('.acc-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          btn.parentElement.classList.toggle('open');
+        });
+      });
+
+      // Swatch selection
+      document.querySelectorAll('.swatch').forEach(s => {
+        s.addEventListener('click', () => {
+          document.querySelectorAll('.swatch').forEach(x => x.classList.remove('is-active'));
+          s.classList.add('is-active');
+        });
+      });
+
+      // Size selection
+      document.querySelectorAll('.size').forEach(b => {
+        b.addEventListener('click', () => {
+          if (b.disabled) return;
+          document.querySelectorAll('.size').forEach(x => x.classList.remove('is-active'));
+          b.classList.add('is-active');
+        });
+      });
+
+      // Style selection
+      document.querySelectorAll('.pill').forEach(p => {
+        p.addEventListener('click', () => {
+          document.querySelectorAll('.pill').forEach(x => x.classList.remove('is-active'));
+          p.classList.add('is-active');
+        });
+      });
+
+      // Main Slider
+      function updateMainSlide() {
+        const itemWidth = mainSliderContainer.children[0].offsetWidth;
+        mainSliderContainer.style.transform = `translateX(${mainScrollPosition * -itemWidth}px)`;
+      }
+
+      function nextMainSlide() {
+        if (mainScrollPosition < mainTotalItems - mainVisibleItems) mainScrollPosition++;
+        else mainScrollPosition = 0;
+        updateMainSlide();
+      }
+
+      function prevMainSlide() {
+        if (mainScrollPosition > 0) mainScrollPosition--;
+        else mainScrollPosition = mainTotalItems - mainVisibleItems;
+        updateMainSlide();
+      }
+
+      mainRightArrow.addEventListener("click", nextMainSlide);
+      mainLeftArrow.addEventListener("click", prevMainSlide);
+
+      // Hanger Icon -> show hanger popup
+      hangerIcon.addEventListener("click", () => {
+        hangerPopup.style.display = "block";
+      });
+
+      // Hanger popup image click -> hide static image, show slider, and close popup
+      hangerPopupImage.addEventListener("click", () => {
+        hangerPopup.style.display = "none";
+        mainFigureImage.style.display = "none";
+        mainSlider.classList.add("active");
+        setInterval(() => {
+          if (mainSlider.classList.contains('active')) nextMainSlide();
+        }, 3000);
+      });
+
+      // Optional: click outside hanger popup to close
+      hangerPopup.addEventListener("click", (e) => {
+        if (e.target === hangerPopup) hangerPopup.style.display = "none";
+      });
+
+      // Share Icon -> show share popup
+      shareIcon.addEventListener("click", () => {
+        sharePopup.style.display = "block";
+      });
+
+      // Close Share Popup
+      closeSharePopup.addEventListener("click", () => {
+        sharePopup.style.display = "none";
+      });
+
+      // Click outside share popup to close
+      sharePopup.addEventListener("click", (e) => {
+        if (e.target === sharePopup) sharePopup.style.display = "none";
+      });
+
+      // Share functionality
+      document.querySelectorAll('.share-popup-inner .share-icon').forEach(icon => {
+        icon.addEventListener('click', () => {
+          const url = icon.getAttribute('data-share-url');
+          const title = icon.getAttribute('data-share-title');
+          if (navigator.share) {
+            navigator.share({
+              title: title,
+              text: `Check out this image: ${title}`,
+              url: url
+            })
+            .then(() => console.log('Shared successfully'))
+            .catch(error => console.error('Error sharing:', error));
+          } else {
+            alert('Web Share API is not supported in this browser. You can copy the link: ' + url);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
